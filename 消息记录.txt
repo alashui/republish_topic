@@ -1,0 +1,37 @@
+控制消息发布频率
+rosrun topic_tools throttle messages scan 1.0 & rosrun topic_tools throttle messages tf 1.0 & rosrun topic_tools throttle messages /camera/depth/points 1.0
+
+rosrun topic_tools throttle messages scan 1.0 & rosrun topic_tools throttle messages tf 1.0 & rosrun topic_tools throttle messages /cloud_downsampled 1.0
+
+rosbag record -O filename /scan_throttle /tf_throttle /camera/depth/points_throttle
+rosbag record -O filename /scan_throttle /tf_throttle /cloud_downsampled_throttle
+
+/camera/depth/image_raw
+/camera/rgb/image_raw
+/camera/depth_registered/points
+/tf
+/tf_static
+
+记录与播放
+rosbag record -O filename /turtle1/cmd_vel /turtle1/pose
+rosbag info filename.bag
+rosbag play subset.bag
+
+
+
+bag文件转PCD文件
+参考：http://wiki.ros.org/pcl_ros
+方法一：bag_to_pcd
+$ rosrun pcl_ros bag_to_pcd <input_file.bag> <topic> <output_directory>
+
+example：
+$ rosrun pcl_ros bag_to_pcd data.bag /velodyne_points ./pcd
+
+
+方法二：pointcloud_to_pcd
+一个终端通过ros发送messages，如：$ rosbag play XXX.bag
+另一个终端接收，如：$ rosrun pcl_ros pointcloud_to_pcd input:=/velodyne_points
+ps:还不清楚为啥方法一生成出来的pcd有点问题，虽然后面看的效果都一样
+
+
+
